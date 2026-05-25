@@ -1,6 +1,6 @@
 <?php
 /**
- * Avukat Sicil Sorgulama API
+ * Sicil Sorgulama API - JSON Array Formatı
  * Telegram: @unutur
  */
 
@@ -19,28 +19,38 @@ if (!file_exists($json_file)) {
     exit;
 }
 
-$json_content = file_get_contents($json_file);
-$veriler = json_decode($json_content, true);
+$content = file_get_contents($json_file);
+$tum_veriler = json_decode($content, true);
+
+if (!is_array($tum_veriler)) {
+    echo json_encode([
+        'success' => false,
+        'error' => 'JSON formatı hatalı',
+        'telegram' => '@unutur'
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 // Parametreler
-$avukat_sicil = $_GET['sicil'] ?? $_GET['avukat_sicil'] ?? null;
-$avukat_tc = $_GET['tc'] ?? $_GET['avukat_tc'] ?? null;
+$sicil = $_GET['sicil'] ?? $_GET['avukat_sicil'] ?? null;
+$tc = $_GET['tc'] ?? $_GET['avukat_tc'] ?? null;
 $dosya_no = $_GET['dosya_no'] ?? null;
 $kisi_ad = $_GET['kisi_ad'] ?? null;
 $kisi_soyad = $_GET['kisi_soyad'] ?? null;
 
 // Sicil no ile ara
-if ($avukat_sicil) {
+if ($sicil) {
     $sonuc = [];
-    foreach ($veriler as $kayit) {
-        if (isset($kayit['AVUKAT_SICIL_NO']) && $kayit['AVUKAT_SICIL_NO'] == $avukat_sicil) {
+    foreach ($tum_veriler as $kayit) {
+        if (isset($kayit['AVUKAT_SICIL_NO']) && (string)$kayit['AVUKAT_SICIL_NO'] === (string)$sicil) {
             $sonuc[] = $kayit;
         }
     }
     if (count($sonuc) > 0) {
         echo json_encode([
             'success' => true,
-            'aranan_sicil' => $avukat_sicil,
+            'sorgu_tipi' => 'sicil_no',
+            'aranan' => $sicil,
             'toplam' => count($sonuc),
             'kayitlar' => $sonuc,
             'telegram' => '@unutur'
@@ -49,23 +59,24 @@ if ($avukat_sicil) {
         echo json_encode([
             'success' => false,
             'error' => 'Sicil numarası kaydı bulunamadı',
-            'aranan_sicil' => $avukat_sicil,
+            'aranan_sicil' => $sicil,
             'telegram' => '@unutur'
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }
 // TC ile ara
-elseif ($avukat_tc) {
+elseif ($tc) {
     $sonuc = [];
-    foreach ($veriler as $kayit) {
-        if (isset($kayit['AVUKAT_TC_KIMLIK_NO']) && $kayit['AVUKAT_TC_KIMLIK_NO'] == $avukat_tc) {
+    foreach ($tum_veriler as $kayit) {
+        if (isset($kayit['AVUKAT_TC_KIMLIK_NO']) && (string)$kayit['AVUKAT_TC_KIMLIK_NO'] === (string)$tc) {
             $sonuc[] = $kayit;
         }
     }
     if (count($sonuc) > 0) {
         echo json_encode([
             'success' => true,
-            'aranan_tc' => $avukat_tc,
+            'sorgu_tipi' => 'tc_kimlik',
+            'aranan' => $tc,
             'toplam' => count($sonuc),
             'kayitlar' => $sonuc,
             'telegram' => '@unutur'
@@ -74,7 +85,7 @@ elseif ($avukat_tc) {
         echo json_encode([
             'success' => false,
             'error' => 'TC kimlik numarası kaydı bulunamadı',
-            'aranan_tc' => $avukat_tc,
+            'aranan_tc' => $tc,
             'telegram' => '@unutur'
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
@@ -82,7 +93,7 @@ elseif ($avukat_tc) {
 // Dosya no ile ara
 elseif ($dosya_no) {
     $sonuc = [];
-    foreach ($veriler as $kayit) {
+    foreach ($tum_veriler as $kayit) {
         if (isset($kayit['DOSYA_NO']) && $kayit['DOSYA_NO'] == $dosya_no) {
             $sonuc[] = $kayit;
         }
@@ -90,7 +101,8 @@ elseif ($dosya_no) {
     if (count($sonuc) > 0) {
         echo json_encode([
             'success' => true,
-            'aranan_dosya_no' => $dosya_no,
+            'sorgu_tipi' => 'dosya_no',
+            'aranan' => $dosya_no,
             'toplam' => count($sonuc),
             'kayitlar' => $sonuc,
             'telegram' => '@unutur'
@@ -99,7 +111,7 @@ elseif ($dosya_no) {
         echo json_encode([
             'success' => false,
             'error' => 'Dosya numarası kaydı bulunamadı',
-            'aranan_dosya_no' => $dosya_no,
+            'aranan_dosya' => $dosya_no,
             'telegram' => '@unutur'
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
@@ -107,7 +119,7 @@ elseif ($dosya_no) {
 // Kişi ad soyad ile ara
 elseif ($kisi_ad && $kisi_soyad) {
     $sonuc = [];
-    foreach ($veriler as $kayit) {
+    foreach ($tum_veriler as $kayit) {
         if (isset($kayit['KISI_ADI']) && isset($kayit['KISI_SOYAD']) && 
             strtolower($kayit['KISI_ADI']) == strtolower($kisi_ad) && 
             strtolower($kayit['KISI_SOYAD']) == strtolower($kisi_soyad)) {
@@ -117,7 +129,8 @@ elseif ($kisi_ad && $kisi_soyad) {
     if (count($sonuc) > 0) {
         echo json_encode([
             'success' => true,
-            'aranan_kisi' => "$kisi_ad $kisi_soyad",
+            'sorgu_tipi' => 'kisi_adi_soyadi',
+            'aranan' => "$kisi_ad $kisi_soyad",
             'toplam' => count($sonuc),
             'kayitlar' => $sonuc,
             'telegram' => '@unutur'
@@ -137,10 +150,10 @@ else {
         'success' => false,
         'error' => 'Sorgu parametresi gerekli',
         'kullanım' => [
-            '/sicil.php?sicil=3860',
-            '/sicil.php?tc=19402658634',
-            '/sicil.php?dosya_no=2016/17736',
-            '/sicil.php?kisi_ad=BERKAY&kisi_soyad=GENÇTÜRK'
+            'sicil' => '/sicilsorgu.php?sicil=2925',
+            'tc' => '/sicilsorgu.php?tc=27175405034',
+            'dosya_no' => '/sicilsorgu.php?dosya_no=2016/17736',
+            'kisi_ad_soyad' => '/sicilsorgu.php?kisi_ad=FURKAN&kisi_soyad=BAŞ'
         ],
         'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
