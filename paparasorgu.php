@@ -1,74 +1,56 @@
 <?php
 /**
- * Papara No Sorgulama API - Basit Dosya Okuma
+ * Papara No Sorgulama API - JSON Dosyasından
  * Telegram: @unutur
  */
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$sql_file = __DIR__ . '/papara.sql';
+// JSON dosyasını oku
+$json_file = __DIR__ . '/papara.json';
 
-if (!file_exists($sql_file)) {
+if (!file_exists($json_file)) {
     echo json_encode([
         'success' => false,
-        'error' => 'papara.sql dosyası bulunamadı',
+        'error' => 'Papara veritabanı bulunamadı',
         'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Dosyayı satır satır oku
-$lines = file($sql_file);
-$papara_list = [];
+$json_content = file_get_contents($json_file);
+$papara_list = json_decode($json_content, true);
 
-foreach ($lines as $line) {
-    // INSERT satırını bul
-    if (strpos($line, 'INSERT INTO `papara`') !== false) {
-        // VALUES kısmını bul
-        if (preg_match('/VALUES\s*\((.*?)\);/i', $line, $match)) {
-            $values = $match[1];
-            // Virgülle ayır
-            $parcalar = explode(',', $values);
-            
-            if (count($parcalar) >= 3) {
-                $paparano = trim($parcalar[1]);
-                $paparano = trim($paparano, "' ");
-                
-                $adsoyad = trim($parcalar[2]);
-                $adsoyad = trim($adsoyad, "' ");
-                
-                $writer = isset($parcalar[3]) ? trim($parcalar[3]) : '';
-                $writer = trim($writer, "' ");
-                
-                $papara_list[$paparano] = [
-                    'adsoyad' => $adsoyad,
-                    'writer' => $writer
-                ];
-            }
-        }
-    }
-}
-
-// Parametre
+// Papara no parametresi
 $paparano = $_GET['paparano'] ?? $_POST['paparano'] ?? null;
 
 if (!$paparano) {
     echo json_encode([
         'success' => false,
         'error' => 'Papara no parametresi gerekli',
-        'kullanım' => '/paparasorgu.php?paparano=1422865344',
+        'toplam_kayit' => count($papara_list),
+        'kullanım' => '/paparasorgu.php?paparano=1354693996',
         'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-if (isset($papara_list[$paparano])) {
+// Ara
+$bulunan = null;
+foreach ($papara_list as $kayit) {
+    if ((string)$kayit['paparano'] === (string)$paparano) {
+        $bulunan = $kayit;
+        break;
+    }
+}
+
+if ($bulunan) {
     echo json_encode([
         'success' => true,
-        'paparano' => $paparano,
-        'adsoyad' => $papara_list[$paparano]['adsoyad'],
-        'writer' => $papara_list[$paparano]['writer'],
+        'paparano' => $bulunan['paparano'],
+        'adsoyad' => $bulunan['adsoyad'],
+        'writer' => $bulunan['writer'],
         'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
@@ -76,6 +58,7 @@ if (isset($papara_list[$paparano])) {
         'success' => false,
         'error' => 'Papara no kaydı bulunamadı',
         'aranan_papara' => $paparano,
+        'toplam_kayit' => count($papara_list),
         'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
