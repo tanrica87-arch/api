@@ -1,37 +1,26 @@
 <?php
 /**
- * Sicil Sorgulama API - Tüm Alanlar (Boşları gösterme)
+ * Sicil Sorgulama API - Raw JSON Parser (Format Bozuk Olsa da Çalışır)
  * Telegram: @zahettim
  */
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// JSON dosyasını oku
 $json_file = __DIR__ . '/sicil_data.json';
 
 if (!file_exists($json_file)) {
     echo json_encode([
         'success' => false,
-        'error' => 'Veritabanı dosyası bulunamadı',
+        'error' => 'Dosya bulunamadı',
         'telegram' => '@zahettim'
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    ]);
     exit;
 }
 
 $content = file_get_contents($json_file);
-$tum_veriler = json_decode($content, true);
 
-if (!is_array($tum_veriler)) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'JSON formatı hatalı',
-        'telegram' => '@zahettim'
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-// Parametre
+// Sicil parametresi
 $sicil = $_GET['sicil'] ?? null;
 
 if (!$sicil) {
@@ -40,31 +29,67 @@ if (!$sicil) {
         'error' => 'Sicil numarası gerekli',
         'kullanım' => '/sicilsorgu.php?sicil=2925',
         'telegram' => '@zahettim'
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    ]);
     exit;
 }
 
-// Sicil ara
+// Bozuk JSON'dan veri çek (satır satır)
+$lines = explode("\n", $content);
 $bulunan = null;
-foreach ($tum_veriler as $kayit) {
-    if (isset($kayit['AVUKAT_SICIL_NO']) && (string)$kayit['AVUKAT_SICIL_NO'] === (string)$sicil) {
-        $bulunan = $kayit;
-        break;
+$current_record = [];
+$in_record = false;
+
+foreach ($lines as $line) {
+    $line = trim($line);
+    
+    // Yeni kayıt başlangıcı
+    if (preg_match('/\{\s*$/', $line) || (strpos($line, '{') !== false && strpos($line, '}') === false)) {
+        $in_record = true;
+        $current_record = [];
+        continue;
+    }
+    
+    // Kayıt bitişi
+    if ($in_record && (preg_match('/^\s*\}\s*,?\s*$/', $line) || strpos($line, '}') !== false)) {
+        // Sicil kontrolü
+        if (isset($current_record['AVUKAT_SICIL_NO']) && (string)$current_record['AVUKAT_SICIL_NO'] === (string)$sicil) {
+            $bulunan = $current_record;
+            break;
+        }
+        $in_record = false;
+        $current_record = [];
+        continue;
+    }
+    
+    // Alanları parse et
+    if ($in_record && preg_match('/"([^"]+)"\s*:\s*"([^"]*)"/', $line, $matches)) {
+        $key = $matches[1];
+        $value = $matches[2];
+        $current_record[$key] = $value;
+    }
+    // Sayısal değerler için
+    elseif ($in_record && preg_match('/"([^"]+)"\s*:\s*([0-9.]+)/', $line, $matches)) {
+        $key = $matches[1];
+        $value = $matches[2];
+        $current_record[$key] = $value;
+    }
+    // Boolean değerler için
+    elseif ($in_record && preg_match('/"([^"]+)"\s*:\s*(true|false)/', $line, $matches)) {
+        $key = $matches[1];
+        $value = $matches[2] === 'true' ? true : false;
+        $current_record[$key] = $value;
     }
 }
 
 if ($bulunan) {
+    // Boş olmayan alanları ekle
     $sonuc = ['success' => true];
-    
-    // Tüm alanları tara, boş veya null olmayanları ekle
     foreach ($bulunan as $key => $value) {
         if ($value !== '' && $value !== null) {
             $sonuc[$key] = $value;
         }
     }
-    
     $sonuc['telegram'] = '@zahettim';
-    
     echo json_encode($sonuc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
     echo json_encode([
