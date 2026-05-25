@@ -1,7 +1,7 @@
 <?php
 /**
  * Plaka Sorgulama API - Dosyadan Okuma (SQLite'siz)
- * Telegram: @zahettim
+ * Telegram: @unutur
  */
 
 header('Content-Type: application/json');
@@ -14,7 +14,7 @@ if (!file_exists($sql_file)) {
     echo json_encode([
         'success' => false,
         'error' => 'Veritabanı dosyası bulunamadı',
-        'telegram' => '@zahettim'
+        'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -59,7 +59,7 @@ if (!$plaka) {
         'error' => 'Plaka parametresi gerekli',
         'toplam_kayit' => count($plakalar),
         'kullanım' => '/plakasorgu.php?plaka=34KG4978',
-        'telegram' => '@zahettim'
+        'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -80,14 +80,14 @@ if ($bulunan) {
         'isim' => $bulunan['isim'],
         'tarih' => $bulunan['tarih'],
         'gsm' => $bulunan['gsm'],
-        'telegram' => '@zahettim'
+        'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
     echo json_encode([
         'success' => false,
         'error' => 'Plaka kaydı bulunamadı',
         'aranan_plaka' => $plaka,
-        'telegram' => '@zahettim'
+        'telegram' => '@unutur'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
 ?>
