@@ -1,52 +1,43 @@
 <?php
 /**
- * Plaka Sorgulama API - SQLite (Dosyadan)
+ * Plaka Sorgulama API - Dosyadan Okuma (SQLite'siz)
  * Telegram: @zahettim
  */
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// SQLite dosyası (plakasrg.sql dosyasını SQLite formatına çevirmen gerek)
-// Not: .sql dosyasını .db ye çevir veya direkt SQLite kullan
+// SQL dosyasını oku
+$sql_file = __DIR__ . '/plakasrg.sql';
 
-$db_file = __DIR__ . '/plakalar.db';
-
-// Eğer SQLite dosyası yoksa oluştur
-if (!file_exists($db_file)) {
-    // MySQL dump dosyasını oku
-    $sql_file = __DIR__ . '/plakasrg.sql';
-    if (file_exists($sql_file)) {
-        $sql_content = file_get_contents($sql_file);
-        
-        // INSERT sorgularını bul
-        preg_match_all("/INSERT INTO `75k_plaka` VALUES \((.+?)\);/", $sql_content, $matches);
-        
-        $db = new SQLite3($db_file);
-        $db->exec("CREATE TABLE IF NOT EXISTS plakalar (
-            id INTEGER PRIMARY KEY,
-            plaka TEXT,
-            isim TEXT,
-            tarih TEXT,
-            gsm TEXT
-        )");
-        
-        foreach ($matches[1] as $values) {
-            $parcalar = explode(',', $values);
-            if (count($parcalar) >= 5) {
-                $plaka = trim($parcalar[1], " '");
-                $isim = trim($parcalar[2], " '");
-                $tarih = trim($parcalar[3], " '");
-                $gsm = trim($parcalar[4], " '");
-                
-                $db->exec("INSERT INTO plakalar (plaka, isim, tarih, gsm) VALUES ('$plaka', '$isim', '$tarih', '$gsm')");
-            }
-        }
-    }
+if (!file_exists($sql_file)) {
+    echo json_encode([
+        'success' => false,
+        'error' => 'Veritabanı dosyası bulunamadı',
+        'telegram' => '@zahettim'
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
-// SQLite'a bağlan
-$db = new SQLite3($db_file);
+// SQL dosyasını oku
+$sql_content = file_get_contents($sql_file);
+
+// Tüm INSERT sorgularını bul
+preg_match_all("/INSERT INTO `75k_plaka` VALUES \((.+?)\);/", $sql_content, $matches);
+
+$plakalar = [];
+foreach ($matches[1] as $values) {
+    $parcalar = explode(',', $values);
+    if (count($parcalar) >= 5) {
+        $plakalar[] = [
+            'id' => trim($parcalar[0]),
+            'plaka' => trim($parcalar[1], " '"),
+            'isim' => trim($parcalar[2], " '"),
+            'tarih' => trim($parcalar[3], " '"),
+            'gsm' => trim($parcalar[4], " '")
+        ];
+    }
+}
 
 // Plaka parametresi
 $plaka = null;
@@ -66,24 +57,29 @@ if (!$plaka) {
     echo json_encode([
         'success' => false,
         'error' => 'Plaka parametresi gerekli',
-        'kullanım' => '/?plaka=34KG4978',
+        'toplam_kayit' => count($plakalar),
+        'kullanım' => '/plakasorgu.php?plaka=34KG4978',
         'telegram' => '@zahettim'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Sorgu
-$stmt = $db->prepare("SELECT * FROM plakalar WHERE plaka = :plaka");
-$stmt->bindValue(':plaka', $plaka, SQLITE3_TEXT);
-$sonuc = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+// Plakayı ara
+$bulunan = null;
+foreach ($plakalar as $kayit) {
+    if ($kayit['plaka'] === $plaka) {
+        $bulunan = $kayit;
+        break;
+    }
+}
 
-if ($sonuc) {
+if ($bulunan) {
     echo json_encode([
         'success' => true,
-        'plaka' => $sonuc['plaka'],
-        'isim' => $sonuc['isim'],
-        'tarih' => $sonuc['tarih'],
-        'gsm' => $sonuc['gsm'],
+        'plaka' => $bulunan['plaka'],
+        'isim' => $bulunan['isim'],
+        'tarih' => $bulunan['tarih'],
+        'gsm' => $bulunan['gsm'],
         'telegram' => '@zahettim'
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
