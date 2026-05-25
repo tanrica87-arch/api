@@ -1,6 +1,6 @@
 <?php
 /**
- * Papara No Sorgulama API - Düzeltilmiş
+ * Papara No Sorgulama API - SQL Dosyasından Tam Okuma
  * Telegram: @unutur
  */
 
@@ -20,37 +20,41 @@ if (!file_exists($sql_file)) {
 
 $sql_content = file_get_contents($sql_file);
 
-// Tüm INSERT sorgularını bul (farklı formatlar için)
-preg_match_all("/INSERT INTO `papara` VALUES \(([^;]+)\)/i", $sql_content, $matches);
+// Tüm INSERT sorgularını bul (daha geniş pattern)
+preg_match_all("/INSERT INTO `papara` .*? VALUES \((.*?)\);/s", $sql_content, $matches);
 
 $papara_list = [];
 
 foreach ($matches[1] as $values) {
-    // Değerleri temizle
+    // Parantez içindeki değerleri temizle
     $values = trim($values);
     
-    // Satır sonlarını temizle
-    $values = preg_replace('/\s+/', ' ', $values);
-    
-    // Virgülle ayır
+    // Basit virgül ayırma (tırnak içindeki virgülleri korumadan)
     $parcalar = array_map('trim', explode(',', $values));
     
     if (count($parcalar) >= 3) {
-        // Tırnak işaretlerini temizle
-        $paparano = trim($parcalar[1]);
+        // id'yi al (ilk değer)
+        $id = trim($parcalar[0]);
+        
+        // paparano'yu al
+        $paparano = isset($parcalar[1]) ? trim($parcalar[1]) : '';
         $paparano = trim($paparano, "'\"");
         
+        // adsoyad'ı al
         $adsoyad = isset($parcalar[2]) ? trim($parcalar[2]) : '';
         $adsoyad = trim($adsoyad, "'\"");
         
+        // writer'ı al
         $writer = isset($parcalar[3]) ? trim($parcalar[3]) : '';
         $writer = trim($writer, "'\"");
         
-        $papara_list[] = [
-            'paparano' => $paparano,
-            'adsoyad' => $adsoyad,
-            'writer' => $writer
-        ];
+        if ($paparano && is_numeric($paparano)) {
+            $papara_list[] = [
+                'paparano' => $paparano,
+                'adsoyad' => $adsoyad,
+                'writer' => $writer
+            ];
+        }
     }
 }
 
@@ -68,7 +72,7 @@ if (!$paparano) {
     exit;
 }
 
-// Ara (string olarak karşılaştır)
+// Ara
 $bulunan = null;
 foreach ($papara_list as $kayit) {
     if ((string)$kayit['paparano'] === (string)$paparano) {
