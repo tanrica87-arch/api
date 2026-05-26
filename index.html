@@ -29,6 +29,7 @@
             --border: #e5e7eb;
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --header-bg: #ffffff;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
         }
 
@@ -226,11 +227,11 @@
 <div class="container">
     <div class="header">
         <div class="logo">
-            <h1> 𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲 </h1>
-            
+            <h1>  𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲  </h1>
+            <p>Gelişmiş Sorgu ve Üretim Hizmetleri</p>
         </div>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-            🌙 Gece
+            🌙 Gece 
         </button>
     </div>
 
@@ -395,6 +396,60 @@
         </div>
     </div>
 
+    <!-- YENİ API'LER BÖLÜMÜ -->
+    <div class="category">
+        <div class="category-title">🆕 Yeni Eklenen API'ler</div>
+        <div class="grid">
+            <!-- Instagram Story Görüntülenme -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Instagram Story Görüntülenme</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Instagram hikayesine görüntülenme gönderir.</div>
+                <div class="api-url">/story.php?username=infazsiz6</div>
+                <button class="try-btn" onclick="testApi('story.php?username=infazsiz6')">Dene</button>
+                <div id="result-story" class="result-area"></div>
+            </div>
+
+            <!-- Temp Mail - Yeni Email -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Temp Mail Oluştur</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Geçici email adresi oluşturur.</div>
+                <div class="api-url">/tempmail.php</div>
+                <button class="try-btn" onclick="testApi('tempmail.php')">Dene</button>
+                <div id="result-temp-create" class="result-area"></div>
+            </div>
+
+            <!-- Temp Mail - Kutusu Kontrol -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Temp Mail Kutusu</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Geçici email adresinin gelen kutusunu kontrol eder.</div>
+                <div class="api-url">/tempmail.php?email=b98c5de8cd@1secmail.com</div>
+                <button class="try-btn" onclick="testApi('tempmail.php?email=b98c5de8cd@1secmail.com')">Dene</button>
+                <div id="result-temp-inbox" class="result-area"></div>
+            </div>
+
+            <!-- Email Bomber -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Email Bomber</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Hedef email adresine toplu email gönderir.</div>
+                <div class="api-url">/embomber.php?email=ornek@gmail.com&count=2</div>
+                <button class="try-btn" onclick="testApi('embomber.php?email=ornek@gmail.com&count=2')">Dene</button>
+                <div id="result-bomber" class="result-area"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
         <p>© 2026 Tüm hakları saklıdır </p>
     </div>
@@ -429,7 +484,6 @@
         setTheme('light');
     }
 
-    // API Test Fonksiyonu
     async function testApi(endpoint) {
         const baseUrl = 'https://api-5-34l6.onrender.com/';
         const fullUrl = baseUrl + endpoint;
@@ -448,6 +502,10 @@
         else if (endpoint.includes('blood')) resultId = 'result-blood';
         else if (endpoint.includes('playcode')) resultId = 'result-play';
         else if (endpoint.includes('defteryazi')) resultId = 'result-defter';
+        else if (endpoint.includes('story.php')) resultId = 'result-story';
+        else if (endpoint.includes('tempmail.php?email')) resultId = 'result-temp-inbox';
+        else if (endpoint.includes('tempmail.php') && !endpoint.includes('email')) resultId = 'result-temp-create';
+        else if (endpoint.includes('embomber')) resultId = 'result-bomber';
         
         const resultDiv = document.getElementById(resultId);
         if (!resultDiv) return;
