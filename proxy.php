@@ -1,23 +1,26 @@
 <?php
 /**
- * Free Proxy List API - Dosya Olarak İndirme
+ * Free Proxy List API - Key Gerektirmez
  * Telegram: @unutur
  */
 
-header('Content-Type: text/plain');
-header('Content-Disposition: attachment; filename="proxies.txt"');
+header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
-if ($limit > 500) $limit = 500;
+$type = isset($_GET['type']) ? $_GET['type'] : 'all';
+$format = isset($_GET['format']) ? $_GET['format'] : 'json'; // json, text
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 50;
 
-// Free proxy kaynakları
+if ($limit > 200) $limit = 200;
+
+// Free proxy kaynakları (key gerektirmez)
 $sources = [
     'https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all',
     'https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt',
     'https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt',
     'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt',
-    'https://www.proxy-list.download/api/v1/get?type=http'
+    'https://www.proxy-list.download/api/v1/get?type=http',
+    'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt'
 ];
 
 $all_proxies = [];
@@ -33,9 +36,11 @@ foreach ($sources as $source) {
     curl_close($ch);
     
     if ($response) {
+        // Her satırdaki proxy'leri al
         $lines = explode("\n", $response);
         foreach ($lines as $line) {
             $line = trim($line);
+            // IP:Port formatını kontrol et
             if (preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}$/', $line)) {
                 $all_proxies[] = $line;
             }
@@ -43,16 +48,29 @@ foreach ($sources as $source) {
     }
 }
 
+// Tekrarları temizle
 $all_proxies = array_unique($all_proxies);
+$all_proxies = array_values($all_proxies);
+
+// Limit uygula
 $proxies = array_slice($all_proxies, 0, $limit);
 
-// Dosya olarak döndür
-echo "# Proxy Listesi\n";
-echo "# Toplam: " . count($all_proxies) . " | Gosterilen: " . count($proxies) . "\n";
-echo "# Olusturma: " . date('Y-m-d H:i:s') . "\n";
-echo "# Telegram: @unutur\n\n";
-
-foreach ($proxies as $proxy) {
-    echo $proxy . "\n";
+if ($format == 'text') {
+    header('Content-Type: text/plain');
+    echo implode("\n", $proxies);
+    exit;
 }
+
+// JSON formatı
+$response = [
+    'success' => true,
+    'total' => count($all_proxies),
+    'count' => count($proxies),
+    'limit' => $limit,
+    'type' => $type,
+    'proxies' => $proxies,
+    'telegram' => '@unutur'
+];
+
+echo json_encode($response, JSON_PRETTY_PRINT);
 ?>
