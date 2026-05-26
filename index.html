@@ -20,7 +20,6 @@
             min-height: 100vh;
         }
 
-        /* Tema Değişkenleri */
         :root {
             --bg: #f3f4f6;
             --card-bg: #ffffff;
@@ -29,7 +28,6 @@
             --border: #e5e7eb;
             --primary: #3b82f6;
             --primary-dark: #2563eb;
-            --header-bg: #ffffff;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
         }
 
@@ -49,7 +47,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -88,7 +85,6 @@
             color: var(--text);
         }
 
-        /* Kategori Kartları */
         .category {
             margin-bottom: 2rem;
         }
@@ -110,7 +106,6 @@
             gap: 1.25rem;
         }
 
-        /* API Kartları */
         .api-card {
             background: var(--card-bg);
             border-radius: 1rem;
@@ -202,7 +197,6 @@
             display: block;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -213,12 +207,8 @@
         }
 
         @media (max-width: 640px) {
-            body {
-                padding: 1rem;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-            }
+            body { padding: 1rem; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -227,247 +217,86 @@
 <div class="container">
     <div class="header">
         <div class="logo">
-            <h1>  𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲  </h1>
-            <p>Gelişmiş Sorgu ve Üretim Hizmetleri</p>
+            <h1>𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲</h1>
         </div>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-            🌙 Gece 
-        </button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Gece </button>
     </div>
 
+    <!-- 🔍 Sorgulama API'leri -->
     <div class="category">
         <div class="category-title">🔍 Sorgulama API'leri</div>
         <div class="grid">
-            <!-- Plaka Sorgu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Plaka Sorgulama</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Plaka numarasına göre araç sahibi bilgilerini getirir.</div>
-                <div class="api-url">/plakasorgu.php?plaka=34KG4978</div>
-                <button class="try-btn" onclick="testApi('plakasorgu.php?plaka=34KG4978')">Dene</button>
-                <div id="result-plaka" class="result-area"></div>
-            </div>
-            <!-- Papara Sorgu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Papara Sorgulama</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Papara numarası ile hesap sahibi bilgisi.</div>
-                <div class="api-url">/paparasorgu.php?paparano=1357003054</div>
-                <button class="try-btn" onclick="testApi('paparasorgu.php?paparano=1357003054')">Dene</button>
-                <div id="result-papara" class="result-area"></div>
-            </div>
-            <!-- Medeni Durum -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Medeni Durum</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Telefon numarasına göre kişisel bilgiler.</div>
-                <div class="api-url">/medenidurum.php?telefon=05300424545</div>
-                <button class="try-btn" onclick="testApi('medenidurum.php?telefon=05300424545')">Dene</button>
-                <div id="result-medeni" class="result-area"></div>
-            </div>
-          <!-- TikTok Kullanıcı Sorgulama -->
-<div class="api-ttsrg">
+            <div class="api-card"><div class="api-header"><span class="api-name">Plaka Sorgulama</span><span class="api-method">GET</span></div><div class="api-desc">Plaka numarasına göre araç sahibi bilgileri.</div><div class="api-url">/plakasorgu.php?plaka=34KG4978</div><button class="try-btn" onclick="testApi('plakasorgu.php?plaka=34KG4978')">Dene</button><div id="result-plaka" class="result-area"></div></div>
+            <!-- SMS Bomber -->
+<div class="api-card">
     <div class="api-header">
-        <span class="api-name">TikTok Kullanıcı Sorgulama</span>
+        <span class="api-name">SMS Bomber</span>
         <span class="api-method">GET</span>
     </div>
-    <div class="api-desc">TikTok kullanıcı adı ile profil bilgilerini getirir.</div>
-    <div class="api-url">/ttsrg.php?username=infazsiz6</div>
-    <button class="try-btn" onclick="testApi('ttsrg.php?username=infazsiz6')">Dene</button>
-    <div id="result-ttsrg" class="result-area"></div>
-</div>  
-            <!-- Telegram Token Sorgu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Token Doğrulama</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Telegram bot tokeninin geçerliliğini kontrol eder.</div>
-                <div class="api-url">/telegram.php?token=BOT_TOKEN</div>
-                <button class="try-btn" onclick="testApi('telegram.php?token=7413992430:AAFYtOBkDhJqt6a-NB3Tzd3nqJOe5K223w0')">Dene</button>
-                <div id="result-token" class="result-area"></div>
-            </div>
-            <!-- Adıyaman Vesika -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Adıyaman Vesika</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">TC kimlik ile vesika fotoğrafı getirir.</div>
-                <div class="api-url">/adiyamanvsk.php?tc=17176267670</div>
-                <button class="try-btn" onclick="testApi('adiyamanvsk.php?tc=17176267670')">Dene</button>
-                <div id="result-vesika" class="result-area"></div>
-            </div>
+    <div class="api-desc">Telefon numarasına toplu SMS gönderir.</div>
+    <div class="api-url">/smsbomber.php?telefon=5551234567&adet=50</div>
+    <button class="try-btn" onclick="testApi('smsbomber.php?telefon=5551234567&adet=50')">Dene</button>
+    <div id="result-smsbomber" class="result-area"></div>
+</div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Papara Sorgulama</span><span class="api-method">GET</span></div><div class="api-desc">Papara numarası ile hesap sahibi bilgisi.</div><div class="api-url">/paparasorgu.php?paparano=1357003054</div><button class="try-btn" onclick="testApi('paparasorgu.php?paparano=1357003054')">Dene</button><div id="result-papara" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Medeni Durum</span><span class="api-method">GET</span></div><div class="api-desc">Telefon numarasına göre kişisel bilgiler.</div><div class="api-url">/medenidurum.php?telefon=05300424545</div><button class="try-btn" onclick="testApi('medenidurum.php?telefon=05300424545')">Dene</button><div id="result-medeni" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Token Doğrulama</span><span class="api-method">GET</span></div><div class="api-desc">Telegram bot tokeninin geçerliliğini kontrol eder.</div><div class="api-url">/telegram.php?token=7413992430:AAFYtOBkDhJqt6a-NB3Tzd3nqJOe5K223w0</div><button class="try-btn" onclick="testApi('telegram.php?token=7413992430:AAFYtOBkDhJqt6a-NB3Tzd3nqJOe5K223w0')">Dene</button><div id="result-token" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">IP Sorgulama</span><span class="api-method">GET</span></div><div class="api-desc">IP adresine göre konum ve detaylı bilgi.</div><div class="api-url">/ip.php?ip=8.8.8.8</div><button class="try-btn" onclick="testApi('ip.php?ip=8.8.8.8')">Dene</button><div id="result-ip" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Adıyaman Vesika</span><span class="api-method">GET</span></div><div class="api-desc">TC kimlik ile vesika fotoğrafı getirir (görsel).</div><div class="api-url">/adiyamanvsk.php?tc=17176267670</div><button class="try-btn" onclick="testApi('adiyamanvsk.php?tc=17176267670')">Dene</button><div id="result-vesika" class="result-area"></div></div>
         </div>
     </div>
 
+    <!-- 💳 Kart & Kimlik API'leri -->
     <div class="category">
         <div class="category-title">💳 Kart & Kimlik API'leri</div>
         <div class="grid">
-            <!-- Rastgele CC -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Rastgele Kart</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Geçerli Luhn algoritmalı rastgele kredi kartı üretir.</div>
-                <div class="api-url">/cc_random.php</div>
-                <button class="try-btn" onclick="testApi('cc_random.php')">Dene</button>
-                <div id="result-ccrand" class="result-area"></div>
-            </div>
-            <!-- CC Sorgu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Kart Sorgulama</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Kart numarasına göre kart bilgilerini getirir.</div>
-                <div class="api-url">/cc_sorgu.php?kart_no=4818081161475565</div>
-                <button class="try-btn" onclick="testApi('cc_sorgu.php?kart_no=4818081161475565')">Dene</button>
-                <div id="result-ccsorgu" class="result-area"></div>
-            </div>
-            <!-- CC Stripe Checker -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">CC Stripe Checker</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Kartın aktif olup olmadığını stripe üzerinden test eder.</div>
-                <div class="api-url">/ccstripe.php?cc=4818081161475565|07|30|853</div>
-                <button class="try-btn" onclick="testApi('ccstripe.php?cc=4818081161475565|07|30|853')">Dene</button>
-                <div id="result-stripe" class="result-area"></div>
-            </div>
-            <!-- Fake Kimlik -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Fake Kimlik</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Rastgele sahte kimlik ve kart bilgisi üretir.</div>
-                <div class="api-url">/fakekimlik.php</div>
-                <button class="try-btn" onclick="testApi('fakekimlik.php')">Dene</button>
-                <div id="result-fake" class="result-area"></div>
-            </div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Rastgele Kart</span><span class="api-method">GET</span></div><div class="api-desc">Geçerli Luhn algoritmalı rastgele kredi kartı üretir.</div><div class="api-url">/cc_random.php</div><button class="try-btn" onclick="testApi('cc_random.php')">Dene</button><div id="result-ccrand" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Kart Sorgulama</span><span class="api-method">GET</span></div><div class="api-desc">Kart numarasına göre kart bilgilerini getirir.</div><div class="api-url">/cc_sorgu.php?kart_no=4818081161475565</div><button class="try-btn" onclick="testApi('cc_sorgu.php?kart_no=4818081161475565')">Dene</button><div id="result-ccsorgu" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">CC Stripe Checker</span><span class="api-method">GET</span></div><div class="api-desc">Kartın aktif olup olmadığını test eder.</div><div class="api-url">/ccstripe.php?cc=4818081161475565|07|30|853</div><button class="try-btn" onclick="testApi('ccstripe.php?cc=4818081161475565|07|30|853')">Dene</button><div id="result-stripe" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Fake Kimlik</span><span class="api-method">GET</span></div><div class="api-desc">Rastgele sahte kimlik ve kart bilgisi üretir.</div><div class="api-url">/fakekimlik.php</div><button class="try-btn" onclick="testApi('fakekimlik.php')">Dene</button><div id="result-fake" class="result-area"></div></div>
         </div>
     </div>
 
+    <!-- 🌦️ Eğlence & Araç API'leri -->
     <div class="category">
-        <div class="category-title">🌦️ Araç & Eğlence API'leri</div>
+        <div class="category-title">🌦️ Eğlence & Araç API'leri</div>
         <div class="grid">
-            <!-- Hava Durumu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Hava Durumu</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Şehre göre anlık hava durumu bilgisi.</div>
-                <div class="api-url">/hava.php?sehir=istanbul</div>
-                <button class="try-btn" onclick="testApi('hava.php?sehir=istanbul')">Dene</button>
-                <div id="result-hava" class="result-area"></div>
-            </div>
-            <!-- Kanlı Yazı -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Kanlı Yazı Logo</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Yazıyı kanlı horror film stiline dönüştürür.</div>
-                <div class="api-url">/blood.php?text=Merhaba</div>
-                <button class="try-btn" onclick="testApi('blood.php?text=Merhaba')">Dene</button>
-                <div id="result-blood" class="result-area"></div>
-            </div>
-            <!-- Play Kodu -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Google Play Kodu</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Rastgele geçerli Google Play hediye kodu üretir.</div>
-                <div class="api-url">/playcode.php</div>
-                <button class="try-btn" onclick="testApi('playcode.php')">Dene</button>
-                <div id="result-play" class="result-area"></div>
-            </div>
-            <!-- Deftere Yazı -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Deftere Yazı</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Yazıyı defter sayfasında gösterir.</div>
-                <div class="api-url">/defteryazi.php?metin=Test</div>
-                <button class="try-btn" onclick="testApi('defteryazi.php?metin=Lorex')">Dene</button>
-                <div id="result-defter" class="result-area"></div>
-            </div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Hava Durumu</span><span class="api-method">GET</span></div><div class="api-desc">Şehre göre anlık hava durumu bilgisi.</div><div class="api-url">/hava.php?sehir=istanbul</div><button class="try-btn" onclick="testApi('hava.php?sehir=istanbul')">Dene</button><div id="result-hava" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Kanlı Yazı Logo</span><span class="api-method">GET</span></div><div class="api-desc">Yazıyı kanlı horror film stiline dönüştürür (görsel).</div><div class="api-url">/blood.php?text=Merhaba</div><button class="try-btn" onclick="testApi('blood.php?text=Merhaba')">Dene</button><div id="result-blood" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Deftere Yazı</span><span class="api-method">GET</span></div><div class="api-desc">Yazıyı defter sayfasında gösterir.</div><div class="api-url">/defteryazi.php?metin=Lorex</div><button class="try-btn" onclick="testApi('defteryazi.php?metin=Lorex')">Dene</button><div id="result-defter" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Google Play Kodu</span><span class="api-method">GET</span></div><div class="api-desc">Rastgele geçerli Google Play hediye kodu üretir.</div><div class="api-url">/playcode.php</div><button class="try-btn" onclick="testApi('playcode.php')">Dene</button><div id="result-play" class="result-area"></div></div>
         </div>
     </div>
 
-    <!-- YENİ API'LER BÖLÜMÜ -->
+    <!-- 📱 Sosyal Medya & SMS API'leri -->
     <div class="category">
-        <div class="category-title">🆕 Yeni Eklenen API'ler</div>
+        <div class="category-title">📱 Sosyal Medya & SMS API'leri</div>
         <div class="grid">
-            <!-- Instagram Story Görüntülenme -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Instagram Story Görüntülenme</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Instagram hikayesine görüntülenme gönderir.</div>
-                <div class="api-url">/story.php?username=infazsiz6</div>
-                <button class="try-btn" onclick="testApi('story.php?username=infazsiz6')">Dene</button>
-                <div id="result-story" class="result-area"></div>
-            </div>
+            <div class="api-card"><div class="api-header"><span class="api-name">TikTok Kullanıcı</span><span class="api-method">GET</span></div><div class="api-desc">TikTok kullanıcı adı ile profil bilgileri.</div><div class="api-url">/ttsrg.php?username=infazsiz6</div><button class="try-btn" onclick="testApi('ttsrg.php?username=infazsiz6')">Dene</button><div id="result-ttsrg" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Instagram Story Görüntülenme</span><span class="api-method">GET</span></div><div class="api-desc">Instagram hikayesine görüntülenme gönderir.</div><div class="api-url">/story.php?username=infazsiz6</div><button class="try-btn" onclick="testApi('story.php?username=infazsiz6')">Dene</button><div id="result-story" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Email Bomber</span><span class="api-method">GET</span></div><div class="api-desc">Hedef email adresine toplu email gönderir.</div><div class="api-url">/embomber.php?email=ornek@gmail.com&count=2</div><button class="try-btn" onclick="testApi('embomber.php?email=ornek@gmail.com&count=2')">Dene</button><div id="result-bomber" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">OTP SMS Toplama</span><span class="api-method">GET</span></div><div class="api-desc">Son OTP SMS mesajlarını gösterir.</div><div class="api-url">/otpapi.php</div><button class="try-btn" onclick="testApi('otpapi.php')">Dene</button><div id="result-otp" class="result-area"></div></div>
+        </div>
+    </div>
 
-            <!-- Temp Mail - Yeni Email -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Temp Mail Oluştur</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Geçici email adresi oluşturur.</div>
-                <div class="api-url">/tempmail.php</div>
-                <button class="try-btn" onclick="testApi('tempmail.php')">Dene</button>
-                <div id="result-temp-create" class="result-area"></div>
-            </div>
-
-            <!-- Temp Mail - Kutusu Kontrol -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Temp Mail Kutusu</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Geçici email adresinin gelen kutusunu kontrol eder.</div>
-                <div class="api-url">/tempmail.php?email=b98c5de8cd@1secmail.com</div>
-                <button class="try-btn" onclick="testApi('tempmail.php?email=b98c5de8cd@1secmail.com')">Dene</button>
-                <div id="result-temp-inbox" class="result-area"></div>
-            </div>
-
-            <!-- Email Bomber -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-name">Email Bomber</span>
-                    <span class="api-method">GET</span>
-                </div>
-                <div class="api-desc">Hedef email adresine toplu email gönderir.</div>
-                <div class="api-url">/embomber.php?email=ornek@gmail.com&count=2</div>
-                <button class="try-btn" onclick="testApi('embomber.php?email=ornek@gmail.com&count=2')">Dene</button>
-                <div id="result-bomber" class="result-area"></div>
-            </div>
+    <!-- 🔧 Proxy & Mail API'leri -->
+    <div class="category">
+        <div class="category-title">🔧 Proxy & Mail API'leri</div>
+        <div class="grid">
+            <div class="api-card"><div class="api-header"><span class="api-name">Proxy Listesi</span><span class="api-method">GET</span></div><div class="api-desc">Ücretsiz çalışan proxy listesi (JSON).</div><div class="api-url">/proxy.php</div><button class="try-btn" onclick="testApi('proxy.php')">Dene</button><div id="result-proxy" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Proxy İndir (TXT)</span><span class="api-method">GET</span></div><div class="api-desc">Proxy listesini text dosyası olarak indir.</div><div class="api-url">/proxy.php?format=text&limit=100</div><button class="try-btn" onclick="downloadProxies()">İndir</button><div id="result-proxy-txt" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Proxy Test</span><span class="api-method">GET</span></div><div class="api-desc">Verilen proxy'nin çalışıp çalışmadığını test eder.</div><div class="api-url">/proxychc.php?proxies=123.45.67.89:8080</div><button class="try-btn" onclick="testApi('proxychc.php?proxies=123.45.67.89:8080')">Dene</button><div id="result-proxychc" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Temp Mail Oluştur</span><span class="api-method">GET</span></div><div class="api-desc">Geçici email adresi oluşturur.</div><div class="api-url">/tempmail.php</div><button class="try-btn" onclick="testApi('tempmail.php')">Dene</button><div id="result-temp-create" class="result-area"></div></div>
+            <div class="api-card"><div class="api-header"><span class="api-name">Temp Mail Kutusu</span><span class="api-method">GET</span></div><div class="api-desc">Geçici email adresinin gelen kutusunu kontrol eder.</div><div class="api-url">/tempmail.php?email=b98c5de8cd@1secmail.com</div><button class="try-btn" onclick="testApi('tempmail.php?email=b98c5de8cd@1secmail.com')">Dene</button><div id="result-temp-inbox" class="result-area"></div></div>
         </div>
     </div>
 
     <div class="footer">
-        <p>© 2026 Tüm hakları saklıdır </p>
+        <p>© 2026 Tüm hakları saklıdır</p>
     </div>
 </div>
 
 <script>
-    // Tema Yönetimi
     function setTheme(theme) {
         if (theme === 'dark') {
             document.body.classList.add('dark');
@@ -479,31 +308,21 @@
             document.getElementById('themeToggle').innerHTML = '🌙 Gece ';
         }
     }
-
     function toggleTheme() {
-        if (document.body.classList.contains('dark')) {
-            setTheme('light');
-        } else {
-            setTheme('dark');
-        }
+        setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
     }
-
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        setTheme('dark');
-    } else {
-        setTheme('light');
-    }
+    setTheme(savedTheme === 'dark' ? 'dark' : 'light');
 
     async function testApi(endpoint) {
         const baseUrl = 'https://api-5-34l6.onrender.com/';
         const fullUrl = baseUrl + endpoint;
-        
         let resultId = '';
         if (endpoint.includes('plakasorgu')) resultId = 'result-plaka';
         else if (endpoint.includes('paparasorgu')) resultId = 'result-papara';
         else if (endpoint.includes('medenidurum')) resultId = 'result-medeni';
         else if (endpoint.includes('telegram')) resultId = 'result-token';
+        else if (endpoint.includes('ip.php')) resultId = 'result-ip';
         else if (endpoint.includes('adiyamanvsk')) resultId = 'result-vesika';
         else if (endpoint.includes('cc_random')) resultId = 'result-ccrand';
         else if (endpoint.includes('cc_sorgu')) resultId = 'result-ccsorgu';
@@ -513,28 +332,35 @@
         else if (endpoint.includes('blood')) resultId = 'result-blood';
         else if (endpoint.includes('playcode')) resultId = 'result-play';
         else if (endpoint.includes('defteryazi')) resultId = 'result-defter';
+        else if (endpoint.includes('ttsrg')) resultId = 'result-ttsrg';
         else if (endpoint.includes('story.php')) resultId = 'result-story';
+        else if (endpoint.includes('embomber')) resultId = 'result-bomber';
+        else if (endpoint.includes('otpapi')) resultId = 'result-otp';
+        else if (endpoint.includes('proxy.php') && !endpoint.includes('format')) resultId = 'result-proxy';
+        else if (endpoint.includes('proxychc')) resultId = 'result-proxychc';
         else if (endpoint.includes('tempmail.php?email')) resultId = 'result-temp-inbox';
         else if (endpoint.includes('tempmail.php') && !endpoint.includes('email')) resultId = 'result-temp-create';
-        else if (endpoint.includes('embomber')) resultId = 'result-bomber';
         
         const resultDiv = document.getElementById(resultId);
         if (!resultDiv) return;
-        
         resultDiv.classList.add('active');
         resultDiv.innerHTML = '⏳ Yükleniyor...';
-        
         try {
             const response = await fetch(fullUrl);
             const data = await response.json();
             resultDiv.innerHTML = JSON.stringify(data, null, 2);
         } catch (error) {
-            let errorMsg = error.message;
-            if (endpoint.includes('blood') || endpoint.includes('adiyamanvsk')) {
-                errorMsg = 'Görsel formatında yanıt dönüyor. Tarayıcıda direkt açmayı deneyin.';
-            }
-            resultDiv.innerHTML = `❌ Hata: ${errorMsg}`;
+            resultDiv.innerHTML = `❌ Hata: ${error.message}`;
         }
+    }
+
+    function downloadProxies() {
+        const link = document.createElement('a');
+        link.href = 'https://api-5-34l6.onrender.com/proxy.php?format=text&limit=100';
+        link.download = 'proxies.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
