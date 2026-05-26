@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        /* Tema Değişkenleri */
+        :root {
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        /* Kategori Kartları */
+        .category {
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        /* API Kartları */
+        .api-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .api-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .api-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .api-method {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        .api-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .api-url {
+            background: var(--bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .try-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .try-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .result-area {
+            margin-top: 1rem;
+            background: var(--bg);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 0.7rem;
+            font-family: monospace;
+            word-break: break-all;
+            display: none;
+            border: 1px solid var(--border);
+            max-height: 200px;
+            overflow: auto;
+        }
+
+        .result-area.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <h1>⚡ 𝗟𝗼𝗿𝗲𝘅 𝗔𝗽𝗶 𝗦𝗲𝗿𝘃𝗶𝗰𝗲</h1>
+            <p>Gelişmiş Sorgu ve Üretim Hizmetleri</p>
+        </div>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+            🌙 Gece Modu
+        </button>
+    </div>
+
+    <div class="category">
+        <div class="category-title">🔍 Sorgulama API'leri</div>
+        <div class="grid">
+            <!-- Plaka Sorgu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Plaka Sorgulama</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Plaka numarasına göre araç sahibi bilgilerini getirir.</div>
+                <div class="api-url">/plakasorgu.php?plaka=34KG4978</div>
+                <button class="try-btn" onclick="testApi('plakasorgu.php?plaka=34KG4978')">Dene</button>
+                <div id="result-plaka" class="result-area"></div>
+            </div>
+            <!-- Papara Sorgu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Papara Sorgulama</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Papara numarası ile hesap sahibi bilgisi.</div>
+                <div class="api-url">/paparasorgu.php?paparano=1357003054</div>
+                <button class="try-btn" onclick="testApi('paparasorgu.php?paparano=1357003054')">Dene</button>
+                <div id="result-papara" class="result-area"></div>
+            </div>
+            <!-- Medeni Durum -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Medeni Durum</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Telefon numarasına göre kişisel bilgiler.</div>
+                <div class="api-url">/medenidurum.php?telefon=05300424545</div>
+                <button class="try-btn" onclick="testApi('medenidurum.php?telefon=05300424545')">Dene</button>
+                <div id="result-medeni" class="result-area"></div>
+            </div>
+            <!-- Telegram Token Sorgu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Token Doğrulama</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Telegram bot tokeninin geçerliliğini kontrol eder.</div>
+                <div class="api-url">/telegram.php?token=BOT_TOKEN</div>
+                <button class="try-btn" onclick="testApi('telegram.php?token=7413992430:AAFYtOBkDhJqt6a-NB3Tzd3nqJOe5K223w0')">Dene</button>
+                <div id="result-token" class="result-area"></div>
+            </div>
+            <!-- Adıyaman Vesika -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Adıyaman Vesika</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">TC kimlik ile vesika fotoğrafı getirir.</div>
+                <div class="api-url">/adiyamanvsk.php?tc=17176267670</div>
+                <button class="try-btn" onclick="testApi('adiyamanvsk.php?tc=17176267670')">Dene</button>
+                <div id="result-vesika" class="result-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <div class="category-title">💳 Kart & Kimlik API'leri</div>
+        <div class="grid">
+            <!-- Rastgele CC -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Rastgele Kart</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Geçerli Luhn algoritmalı rastgele kredi kartı üretir.</div>
+                <div class="api-url">/cc_random.php</div>
+                <button class="try-btn" onclick="testApi('cc_random.php')">Dene</button>
+                <div id="result-ccrand" class="result-area"></div>
+            </div>
+            <!-- CC Sorgu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Kart Sorgulama</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Kart numarasına göre kart bilgilerini getirir.</div>
+                <div class="api-url">/cc_sorgu.php?kart_no=4818081161475565</div>
+                <button class="try-btn" onclick="testApi('cc_sorgu.php?kart_no=4818081161475565')">Dene</button>
+                <div id="result-ccsorgu" class="result-area"></div>
+            </div>
+            <!-- CC Stripe Checker -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">CC Stripe Checker</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Kartın aktif olup olmadığını stripe üzerinden test eder.</div>
+                <div class="api-url">/ccstripe.php?cc=4818081161475565|07|30|853</div>
+                <button class="try-btn" onclick="testApi('ccstripe.php?cc=4818081161475565|07|30|853')">Dene</button>
+                <div id="result-stripe" class="result-area"></div>
+            </div>
+            <!-- Fake Kimlik -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Fake Kimlik</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Rastgele sahte kimlik ve kart bilgisi üretir.</div>
+                <div class="api-url">/fakekimlik.php</div>
+                <button class="try-btn" onclick="testApi('fakekimlik.php')">Dene</button>
+                <div id="result-fake" class="result-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <div class="category-title">🌦️ Araç & Eğlence API'leri</div>
+        <div class="grid">
+            <!-- Hava Durumu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Hava Durumu</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Şehre göre anlık hava durumu bilgisi.</div>
+                <div class="api-url">/hava.php?sehir=istanbul</div>
+                <button class="try-btn" onclick="testApi('hava.php?sehir=istanbul')">Dene</button>
+                <div id="result-hava" class="result-area"></div>
+            </div>
+            <!-- Kanlı Yazı -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Kanlı Yazı Logo</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Yazıyı kanlı horror film stiline dönüştürür.</div>
+                <div class="api-url">/blood.php?text=Merhaba</div>
+                <button class="try-btn" onclick="testApi('blood.php?text=Merhaba')">Dene</button>
+                <div id="result-blood" class="result-area"></div>
+            </div>
+            <!-- Play Kodu -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Google Play Kodu</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Rastgele geçerli Google Play hediye kodu üretir.</div>
+                <div class="api-url">/playcode.php</div>
+                <button class="try-btn" onclick="testApi('playcode.php')">Dene</button>
+                <div id="result-play" class="result-area"></div>
+            </div>
+            <!-- Deftere Yazı -->
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="api-name">Deftere Yazı</span>
+                    <span class="api-method">GET</span>
+                </div>
+                <div class="api-desc">Yazıyı defter sayfasında gösterir.</div>
+                <div class="api-url">/defteryazi.php?metin=Test</div>
+                <button class="try-btn" onclick="testApi('defteryazi.php?metin=Lorex')">Dene</button>
+                <div id="result-defter" class="result-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Lorex Tool | Tüm API'ler ücretsiz ve herkese açıktır | 📢 Telegram: @zahettim</p>
+    </div>
+</div>
+
+<script>
+    // Tema Yönetimi
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '☀️ Gündüz Modu';
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '🌙 Gece Modu';
+        }
+    }
+
+    function toggleTheme() {
+        if (document.body.classList.contains('dark')) {
+            setTheme('light');
+        } else {
+            setTheme('dark');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+
+    // API Test Fonksiyonu
+    async function testApi(endpoint) {
+        const baseUrl = 'https://api-5-34l6.onrender.com/';
+        const fullUrl = baseUrl + endpoint;
+        
+        let resultId = '';
+        if (endpoint.includes('plakasorgu')) resultId = 'result-plaka';
+        else if (endpoint.includes('paparasorgu')) resultId = 'result-papara';
+        else if (endpoint.includes('medenidurum')) resultId = 'result-medeni';
+        else if (endpoint.includes('telegram')) resultId = 'result-token';
+        else if (endpoint.includes('adiyamanvsk')) resultId = 'result-vesika';
+        else if (endpoint.includes('cc_random')) resultId = 'result-ccrand';
+        else if (endpoint.includes('cc_sorgu')) resultId = 'result-ccsorgu';
+        else if (endpoint.includes('ccstripe')) resultId = 'result-stripe';
+        else if (endpoint.includes('fakekimlik')) resultId = 'result-fake';
+        else if (endpoint.includes('hava')) resultId = 'result-hava';
+        else if (endpoint.includes('blood')) resultId = 'result-blood';
+        else if (endpoint.includes('playcode')) resultId = 'result-play';
+        else if (endpoint.includes('defteryazi')) resultId = 'result-defter';
+        
+        const resultDiv = document.getElementById(resultId);
+        if (!resultDiv) return;
+        
+        resultDiv.classList.add('active');
+        resultDiv.innerHTML = '⏳ Yükleniyor...';
+        
+        try {
+            const response = await fetch(fullUrl);
+            const data = await response.json();
+            resultDiv.innerHTML = JSON.stringify(data, null, 2);
+        } catch (error) {
+            let errorMsg = error.message;
+            if (endpoint.includes('blood') || endpoint.includes('adiyamanvsk')) {
+                errorMsg = 'Görsel formatında yanıt dönüyor. Tarayıcıda direkt açmayı deneyin.';
+            }
+            resultDiv.innerHTML = `❌ Hata: ${errorMsg}`;
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            testApi('plakasorgu.php?plaka=34KG4978');
+            testApi('cc_random.php');
+            testApi('hava.php?sehir=istanbul');
+        }, 500);
+    });
+</script>
+</body>
+</html>
